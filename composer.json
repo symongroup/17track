@@ -1,9 +1,9 @@
 {
-    "name": "sch-group/17track",
-    "description": "17Track (SeventeenTrack) api connector",
+    "name": "symongroup/17track",
+    "description": "17Track v2 (SeventeenTrack) api connector",
     "type": "library",
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "guzzlehttp/guzzle": ">=6.2",
         "ext-json": "*"
     },
@@ -15,8 +15,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "aahmetgaliev",
-            "email": "ainur_ahmetgalie@mail.ru"
+            "name": "byron",
+            "email": "sunxiaobo@xasap.com"
         }
     ],
     "autoload": {
