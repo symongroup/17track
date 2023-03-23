@@ -1,8 +1,8 @@
 <?php
 
-namespace SchGroup\SeventeenTrack\Contracts;
+namespace SymonGroup\SeventeenTrack\Contracts;
 
-use SchGroup\SeventeenTrack\Components\TrackEvent;
+use SymonGroup\SeventeenTrack\Components\TrackEvent;
 
 interface ShipmentTracker
 {
@@ -31,5 +31,15 @@ interface ShipmentTracker
     public function changeCarrierMulti(array $trackNumbers): array;
 
     public function reTrackMulti(array $trackNumbers): array;
+
+    public function changeInfo(string $trackNumber, $items, int $carrier = null): bool;
+
+    public function deleteTrack(string $trackNumber, int $carrier = null): bool;
+
+    public function getQuota(): array;
+
+    public function getTrackList(string $trackNumber = null, int $carrier = null, int $page_no = null);
+
+    public function push(string $trackNumber, int $carrier = null): bool;
 
 }

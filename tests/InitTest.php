@@ -1,13 +1,13 @@
 <?php
 
 
-namespace SchGroup\SeventeenTrack\Tests;
+namespace SymonGroup\SeventeenTrack\Tests;
 
 use Matomo\Ini\IniReader;
 use PHPUnit\Framework\TestCase;
-use SchGroup\SeventeenTrack\Components\TrackEvent;
-use SchGroup\SeventeenTrack\Connectors\TrackingConnector;
-use SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException;
+use SymonGroup\SeventeenTrack\Components\TrackEvent;
+use SymonGroup\SeventeenTrack\Connectors\TrackingConnector;
+use SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException;
 
 class InitTest extends TestCase
 {
@@ -50,7 +50,7 @@ class InitTest extends TestCase
 
     /**
      * @test
-     * @expectedException \SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
+     * @expectedException \SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
      * @throws \Exception
      */
     public function it_fails_on_register_track()
@@ -134,7 +134,7 @@ class InitTest extends TestCase
 
     /**
      * @test
-     * @expectedException \SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
+     * @expectedException \SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
      */
     public function it_fails_change_carrier()
     {
@@ -155,7 +155,7 @@ class InitTest extends TestCase
     }
     /**
      * @test
-     * @expectedException \SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
+     * @expectedException \SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
      */
     public function it_fails_re_track()
     {
@@ -165,7 +165,7 @@ class InitTest extends TestCase
 
     /**
      * @test
-     * @expectedException \SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
+     * @expectedException \SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException
      */
     public function it_fails_stop_track()
     {

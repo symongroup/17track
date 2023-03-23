@@ -1,6 +1,6 @@
 <?php
 
-namespace SchGroup\SeventeenTrack\Exceptions;
+namespace SymonGroup\SeventeenTrack\Exceptions;
 
 use Throwable;
 

@@ -21,12 +21,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "SchGroup\\SeventeenTrack\\" : "src/"
+            "SymonGroup\\SeventeenTrack\\" : "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SchGroup\\SeventeenTrack\\Tests\\": "tests/"
+            "SymonGroup\\SeventeenTrack\\Tests\\": "tests/"
         }
     }
 }

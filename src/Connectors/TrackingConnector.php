@@ -1,16 +1,16 @@
 <?php
 
-namespace SchGroup\SeventeenTrack\Connectors;
+namespace SymonGroup\SeventeenTrack\Connectors;
 
 use GuzzleHttp\Client;
-use SchGroup\SeventeenTrack\Components\Config;
-use SchGroup\SeventeenTrack\Components\TrackEvent;
-use SchGroup\SeventeenTrack\Contracts\ShipmentTracker;
-use SchGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException;
+use SymonGroup\SeventeenTrack\Components\Config;
+use SymonGroup\SeventeenTrack\Components\TrackEvent;
+use SymonGroup\SeventeenTrack\Contracts\ShipmentTracker;
+use SymonGroup\SeventeenTrack\Exceptions\SeventeenTrackMethodCallException;
 
 class TrackingConnector implements ShipmentTracker
 {
-    const API_VERSION = '/v1';
+    const API_VERSION = '/v2';
 
     const REGISTER_URI = '/register';
 
@@ -18,9 +18,19 @@ class TrackingConnector implements ShipmentTracker
 
     const STOP_TRACK_URI = '/stoptrack';
 
-    const RE_TRACK_URI = '/Retrack';
+    const RE_TRACK_URI = '/retrack';
 
     const GET_TRACK_INFO_URI = '/gettrackinfo';
+
+    const CHANGE_INFO_URL = '/changeinfo';
+
+    const DELETE_TRACK_URL = '/deletetrack';
+
+    const GET_QUOTA_URL = '/getquota';
+
+    const GET_TRACK_LIST_URL = '/gettracklist';
+
+    const PUSH_URL = '/push';
     /**
      * @var Client
      */
@@ -57,7 +67,7 @@ class TrackingConnector implements ShipmentTracker
      * @return bool
      * @throws SeventeenTrackMethodCallException
      */
-    public function register(string $trackNumber, string $carrier = null, string $tag = null): bool
+    public function register(string $trackNumber, string $carrier = null, string $tag = null, $param = null): bool
     {
         $params = ['number' => $trackNumber];
         if(!empty($carrier)) {
@@ -65,6 +75,9 @@ class TrackingConnector implements ShipmentTracker
         }
         if(!empty($tag)) {
             $params['tag'];
+        }
+        if(!empty($param)) {
+            $params['param'] = $param;
         }
         $response = $this->registerMulti([
             $params
@@ -261,6 +274,103 @@ class TrackingConnector implements ShipmentTracker
     }
 
     /**
+     * @param string $trackNumber
+     * @param int $carrier
+     * @param object|array $items
+     * @return bool
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function changeInfo(string $trackNumber, $items, int $carrier = null): bool
+    {
+        $response = $this->changeInfoMulti([[
+            'number' => $trackNumber,
+            'items' => $items,
+            'carrier' => $carrier
+        ]]);
+
+        $this->checkErrors($response, self::CHANGE_INFO_URL);
+
+        return true;
+    }
+
+    /**
+     * @param string $trackNumber
+     * @param int|null $carrier
+     * @return bool
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function deleteTrack(string $trackNumber, int $carrier = null): bool
+    {
+        $response = $this->deleteTrackMulti([[
+            'number' => $trackNumber,
+            'carrier' => $carrier
+        ]]);
+
+        $this->checkErrors($response, self::DELETE_TRACK_URL);
+
+        return true;
+    }
+
+    /**
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function getQuota(): array
+    {
+        $trackInfo = $this->getQuotaMulti();
+
+        $this->checkErrors($trackInfo, self::GET_QUOTA_URL);
+
+        return $trackInfo['data'];
+    }
+
+    /**
+     * @param string|null $trackNumber
+     * @param int|null $carrier
+     * @param int|null $page_no
+     * @return mixed
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function getTrackList(string $trackNumber = null, int $carrier = null, int $page_no = null)
+    {
+        $params = [];
+        if (!empty($trackNumber)) {
+            $params['number'] = $trackNumber;
+        }
+        if (!empty($carrier)) {
+            $params['carrier'] = $carrier;
+        }
+        if (!empty($page_no)) {
+            $params['page_no'] = $page_no;
+        }
+        $trackInfo = $this->getTrackListMulti([
+            $params
+        ]);
+
+        $this->checkErrors($trackInfo, self::DELETE_TRACK_URL);
+
+        return $trackInfo;
+    }
+
+    /**
+     * @param string $trackNumber
+     * @param int|null $carrier
+     * @return bool
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function push(string $trackNumber, int $carrier = null): bool
+    {
+        $response = $this->pushMulti([[
+            'number' => $trackNumber,
+            'carrier' => $carrier
+        ]]);
+
+        $this->checkErrors($response, self::DELETE_TRACK_URL);
+
+        return true;
+    }
+
+    /**
      * @param array $trackNumbers
      * @return array
      * @throws SeventeenTrackMethodCallException
@@ -316,6 +426,65 @@ class TrackingConnector implements ShipmentTracker
     public function reTrackMulti(array $trackNumbers): array
     {
         $url = $this->config->getHost() . self::API_VERSION . self::RE_TRACK_URI;
+
+        return $this->baseRequest($trackNumbers, $url);
+    }
+
+    /**
+     * @param array $trackNumbers
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function changeInfoMulti(array $trackNumbers): array
+    {
+        $url = $this->config->getHost() . self::API_VERSION . self::CHANGE_INFO_URL;
+
+        return $this->baseRequest($trackNumbers, $url);
+    }
+
+    /**
+     * @param array $trackNumbers
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function deleteTrackMulti(array $trackNumbers): array
+    {
+        $url = $this->config->getHost() . self::API_VERSION . self::DELETE_TRACK_URL;
+
+        return $this->baseRequest($trackNumbers, $url);
+    }
+
+    /**
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function getQuotaMulti(): array
+    {
+        $url = $this->config->getHost() . self::API_VERSION . self::GET_QUOTA_URL;
+
+        return $this->baseRequest([], $url);
+    }
+
+    /**
+     * @param array $trackNumbers
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function getTrackListMulti(array $trackNumbers): array
+    {
+        $url = $this->config->getHost() . self::API_VERSION . self::GET_TRACK_LIST_URL;
+
+        return $this->baseRequest($trackNumbers, $url);
+    }
+
+    /**
+     * @param array $trackNumbers
+     * @return array
+     * @throws SeventeenTrackMethodCallException
+     */
+    public function pushMulti(array $trackNumbers): array
+    {
+        $url = $this->config->getHost() . self::API_VERSION . self::PUSH_URL;
 
         return $this->baseRequest($trackNumbers, $url);
     }

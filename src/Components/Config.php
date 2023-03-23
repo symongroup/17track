@@ -1,6 +1,6 @@
 <?php
 
-namespace SchGroup\SeventeenTrack\Components;
+namespace SymonGroup\SeventeenTrack\Components;
 
 class Config
 {
